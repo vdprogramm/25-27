@@ -1,0 +1,109 @@
+using System;
+
+namespace University
+{
+    public abstract class Person
+    {
+        public string name;
+        public int age;
+        public string gender;
+        protected string bank_account;
+
+        public Person(string name, int age, string gender)
+        {
+            this.name = name;
+            this.age = age;
+            this.gender = gender;
+        }
+
+        public abstract string getRole();
+    }
+
+    public interface KPIEvaluator
+    {
+        double calculateKPI();
+    }
+
+    public class TeachingAssistant : Person, KPIEvaluator
+    {
+        public string employeeID;
+        private int numberOfCourses;
+
+        public TeachingAssistant(string name, int age, string gender, string employeeID, int numberOfCourses)
+            : base(name, age, gender)
+        {
+            this.employeeID = employeeID;
+            this.numberOfCourses = numberOfCourses;
+        }
+
+        public override string getRole()
+        {
+            return "Teaching Assistant";
+        }
+
+        public double calculateKPI()
+        {
+            return numberOfCourses * 5;
+        }
+    }
+
+    public class Lecturer : Person, KPIEvaluator
+    {
+        public string employeeID;
+        private int numberOfPublications;
+
+        public Lecturer(string name, int age, string gender, string employeeID, int numberOfPublications)
+            : base(name, age, gender)
+        {
+            this.employeeID = employeeID;
+            this.numberOfPublications = numberOfPublications;
+        }
+
+        public override string getRole()
+        {
+            return "Lecturer";
+        }
+
+        public double calculateKPI()
+        {
+            return numberOfPublications * 7;
+        }
+    }
+
+    public sealed class Professor : Lecturer
+    {
+        public static int countProfessors = 0;
+        private int numberOfProjects;
+
+        public Professor(string name, int age, string gender, string employeeID, int numberOfPublications, int numberOfProjects)
+            : base(name, age, gender, employeeID, numberOfPublications)
+        {
+            this.numberOfProjects = numberOfProjects;
+            countProfessors++;
+        }
+
+        public override string getRole()
+        {
+            return "Professor";
+        }
+
+        public new double calculateKPI()
+        {
+            return base.calculateKPI() + numberOfProjects * 10;
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            TeachingAssistant ta = new TeachingAssistant("John Doe", 25, "Male", "TA001", 3);
+            Lecturer lec = new Lecturer("Jane Smith", 40, "Female", "LEC001", 5);
+            Professor prof = new Professor("James Brown", 55, "Male", "PROF001", 10, 4);
+
+            Console.WriteLine($"{ta.name} is a {ta.getRole()} with a KPI of {ta.calculateKPI()}");
+            Console.WriteLine($"{lec.name} is a {lec.getRole()} with a KPI of {lec.calculateKPI()}");
+            Console.WriteLine($"{prof.name} is a {prof.getRole()} with a KPI of {prof.calculateKPI()}");
+        }
+    }
+}
